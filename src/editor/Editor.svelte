@@ -1,13 +1,24 @@
 <script>
   import Nav from './Nav.svelte';
+  import { EditorRegistry } from "./js/editorRegistry.js";
   import TitleAndSubtitleEditor from './components/TitleAndSubtitleEditor.svelte';
   import EqEditor from './components/EqEditor.svelte';
+  import { slideFactory } from './js/slideFactory';
 
   export let deck = null;
   export let currentTime = 0;
 
   $: slides = deck?.deck || [];
 
+  ///////////////////////////////////////////
+  function addSlide(type) {
+  const fn = slideFactory[type];
+  if (!fn) return;
+
+  const newSlide = fn();
+  deck.deck = [...deck.deck, newSlide];
+}
+  ///////////////////////////////////////////
   // ---- UI STATE ----
   let collapsed = {};
   let allCollapsed = false;
@@ -69,14 +80,12 @@
 </script>
 
 <div class="editor">
-
   <!-- NAV -->
-  <Nav {allCollapsed} onToggleAll={toggleAll} />
+  <Nav on:addSlide={(e) => addSlide(e.detail.type)} />
 
   {#if slides.length === 0}
     <p class="empty">No slides</p>
   {/if}
-
   {#each slides as slide, i}
     <div class="slide">
 
@@ -103,15 +112,15 @@
       {#if !collapsed[i]}
         <div class="slide-body">
 
-          {#if slide.type === 'titleAndSubtitle'}
-            <TitleAndSubtitleEditor {slide} {currentTime} />
-
-          {:else if slide.type === 'eq'}
-            <EqEditor {slide} {currentTime} />
-
+          {#if EditorRegistry[slide.type]}
+            <svelte:component
+              this={EditorRegistry[slide.type]}
+              {slide}
+              {currentTime}
+            />
           {:else}
             <div class="fallback">
-              Type: {slide.type}
+              Unknown type: {slide.type}
             </div>
           {/if}
 
@@ -120,8 +129,7 @@
 
     </div>
   {/each}
-
-</div>
+</div>  
 
 <style>
   .editor {

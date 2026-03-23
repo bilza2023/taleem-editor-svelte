@@ -4,7 +4,8 @@
   import equationDeck from '../public/equation-demo.json';
   // import goldDeck from '../public/gold.json';
 
-  let deck = equationDeck;
+  // let deck = equationDeck;
+  let deck = {deck:[]};
 
   // 🔥 single source of time
   let currentTime = 0;

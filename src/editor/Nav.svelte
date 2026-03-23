@@ -1,32 +1,63 @@
 <script>
-    export let allCollapsed = false;
-    export let onToggleAll;
-  </script>
-  
-  <div class="nav">
-    <button on:click={onToggleAll}>
-      {allCollapsed ? '▢ Unfold All' : '▣ Fold All'}
+  import { createEventDispatcher } from "svelte";
+  const dispatch = createEventDispatcher();
+
+  function add(type) {
+    dispatch("addSlide", { type });
+  }
+
+  const buttons = [
+    { type: "titleAndSubtitle", icon: "🅣" },
+    { type: "titleAndPara", icon: "📄" },
+    { type: "bulletList", icon: "☰" },
+    { type: "twoColumnText", icon: "⫷⫸" },
+
+    { type: "imageSlide", icon: "🖼️" },
+    { type: "fillImage", icon: "⬛" },
+    { type: "imageWithTitle", icon: "🖼️🅣" },
+    { type: "imageWithCaption", icon: "🖼️💬" },
+    { type: "imageLeftBulletsRight", icon: "🖼️➡️" },
+    { type: "imageRightBulletsLeft", icon: "⬅️🖼️" },
+
+    { type: "eq", icon: "∑" },
+
+    { type: "table", icon: "▦" },
+
+    { type: "barChart", icon: "📊" },
+    { type: "progressbar", icon: "📈" },
+    { type: "quoteSlide", icon: "❝❞" },
+    { type: "keyIdeasSlide", icon: "💡" }
+  ];
+</script>
+
+<style>
+  .nav {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    background: #111;
+    border-bottom: 1px solid #222;
+  }
+
+  button {
+    background: #1a1a1a;
+    color: #fff;
+    border: 1px solid #333;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  button:hover {
+    background: #2a2a2a;
+  }
+</style>
+
+<div class="nav">
+  {#each buttons as b}
+    <button on:click={() => add(b.type)} title={b.type}>
+      {b.icon}
     </button>
-  </div>
-  
-  <style>
-    .nav {
-      display: flex;
-      gap: 10px;
-      padding: 10px;
-      border-bottom: 1px solid #333;
-      background: #1a1a1a;
-    }
-  
-    button {
-      background: #222;
-      color: #fff;
-      border: 1px solid #444;
-      padding: 6px 12px;
-      cursor: pointer;
-    }
-  
-    button:hover {
-      background: #333;
-    }
-  </style>
+  {/each}
+</div>
