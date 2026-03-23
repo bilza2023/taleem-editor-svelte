@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="editor-root"></div>
+
+<script type="module">
+  import Editor from "./build/js/editor.js";
+
+  const deck = {
+    deck: [
+      {
+        type: "table",
+        data: [
+          ["A", "B"],
+          ["C", "D"]
+        ]
+      }
+    ]
+  };
+
+  new Editor({
+    target: document.getElementById("editor-root"),
+    props: {
+      deck: deck
+    }
+  });
+</script>
+
+</body>
+</html>
