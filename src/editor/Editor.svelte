@@ -1,11 +1,10 @@
 <script>
   import Nav from './Nav.svelte';
   import { EditorRegistry } from "./js/editorRegistry.js";
-  import TitleAndSubtitleEditor from './components/TitleAndSubtitleEditor.svelte';
-  import EqEditor from './components/EqEditor.svelte';
   import { slideFactory } from './js/slideFactory';
+  import { finalizeDeck } from "./js/finalizeDeck.js";
 
-  export let deck = null;
+  export let deck = { deck: [] };
   export let currentTime = 0;
 
   $: slides = deck?.deck || [];
@@ -15,8 +14,22 @@
   const fn = slideFactory[type];
   if (!fn) return;
 
-  const newSlide = fn();
-  deck.deck = [...deck.deck, newSlide];
+  const baseSlide = fn();
+
+  const arr = deck.deck;
+  const last = arr[arr.length - 1];
+
+  const start = last ? last.end : 0;
+  const duration = 5; // default seconds per slide
+  const end = start + duration;
+
+  const newSlide = {
+    ...baseSlide,
+    start,
+    end
+  };
+
+  deck.deck = [...arr, newSlide];
 }
   ///////////////////////////////////////////
   // ---- UI STATE ----
@@ -77,11 +90,36 @@
 
     collapsed = newCollapsed;
   }
+  function handleDownload() {
+  const result = finalizeDeck(deck);
+
+  if (!result.ok) {
+    console.error(result);
+    alert("Deck invalid. Check console.");
+    return;
+  }
+
+  const finalDeck = result.deck; // 🔥 THIS is the fix
+
+  const blob = new Blob(
+    [JSON.stringify(finalDeck, null, 2)],
+    { type: "application/json" }
+  );
+
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "deck.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
 </script>
 
 <div class="editor">
   <!-- NAV -->
-  <Nav on:addSlide={(e) => addSlide(e.detail.type)} />
+  <Nav add={addSlide} onDownload={handleDownload} />
 
   {#if slides.length === 0}
     <p class="empty">No slides</p>

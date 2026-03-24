@@ -1,10 +1,6 @@
 <script>
-  import { createEventDispatcher } from "svelte";
-  const dispatch = createEventDispatcher();
-
-  function add(type) {
-    dispatch("addSlide", { type });
-  }
+  export let add;
+  export let onDownload;
 
   const buttons = [
     { type: "titleAndSubtitle", icon: "🅣" },
@@ -26,7 +22,10 @@
     { type: "barChart", icon: "📊" },
     { type: "progressbar", icon: "📈" },
     { type: "quoteSlide", icon: "❝❞" },
-    { type: "keyIdeasSlide", icon: "💡" }
+    { type: "keyIdeasSlide", icon: "💡" },
+
+    // special action
+    { type: "download", icon: "⬇️" }
   ];
 </script>
 
@@ -56,7 +55,16 @@
 
 <div class="nav">
   {#each buttons as b}
-    <button on:click={() => add(b.type)} title={b.type}>
+    <button
+      on:click={() => {
+        if (b.type === "download") {
+          onDownload && onDownload();
+        } else {
+          add(b.type);
+        }
+      }}
+      title={b.type}
+    >
       {b.icon}
     </button>
   {/each}
