@@ -115,6 +115,32 @@
 
   URL.revokeObjectURL(url);
 }
+function setStartTime(i) {
+  const T = currentTime;
+
+  const arr = deck.deck;
+
+  // first slide always starts at 0
+  if (i === 0) {
+    arr[0].start = 0;
+    if (arr[0].end <= 0) arr[0].end = 1;
+    deck.deck = [...arr];
+    return;
+  }
+
+  // previous slide ends here
+  arr[i - 1].end = T;
+
+  // current slide starts here
+  arr[i].start = T;
+
+  // safety: ensure end > start
+  if (arr[i].end <= arr[i].start) {
+    arr[i].end = arr[i].start + 1;
+  }
+
+  deck.deck = [...arr]; // trigger reactivity
+}
 </script>
 
 <div class="editor">
@@ -135,10 +161,15 @@
             {collapsed[i] ? '▶' : '▼'}
           </button>
 
-          <span>#{i + 1} — {slide.type}</span>
+          <span>
+            #{i + 1} — {slide.type}
+            <small style="margin-left:10px; color:#888;">
+              [{slide.start ?? 0} → {slide.end ?? 0}]
+            </small>
+          </span>
         </div>
-
         <div class="right">
+          <button on:click={() => setStartTime(i)}>⏱</button>
           <button on:click={() => moveUp(i)}>⬆</button>
           <button on:click={() => moveDown(i)}>⬇</button>
           <button on:click={() => deleteSlide(i)}>🗑</button>
