@@ -1,5 +1,11 @@
 <script>
-  import Editor from './editor/Editor.svelte';
+let currentDeck = null;
+function handleExport(deck) {
+  currentDeck = deck;
+
+  console.log("FINAL EXPORTED DECK:", deck);
+}
+import Editor from './editor/Editor.svelte';
 
   import equationDeck from '../public/equation-demo.json';
   // import goldDeck from '../public/gold.json';
@@ -11,8 +17,11 @@
 
 <div class="app">
 
-  <Editor bind:deck={deck}/>
-
+  <!-- <Editor bind:deck={deck}/> -->
+  <Editor
+  {deck}
+  onExport={handleExport}
+/>
 </div>
 
 <style>

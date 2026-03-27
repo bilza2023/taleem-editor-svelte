@@ -6,6 +6,10 @@
 
   export let deck = { deck: [] };
   export let currentTime = 0;
+  
+  export let onExport = (deck) => {
+  console.log("EXPORT CALLED", deck);
+  };
 
   $: slides = deck?.deck || [];
 
@@ -116,11 +120,32 @@
   URL.revokeObjectURL(url);
 }
 
+function handleSave() {
+  const result = finalizeDeck(deck);
+
+  if (!result.ok) {
+    console.error(result);
+    alert("Deck invalid. Check console.");
+    return;
+  }
+
+  const finalDeck = result.deck;
+
+  // 🔥 call parent
+  onExport(finalDeck);
+
+  alert("Deck exported to parent");
+}
+
 </script>
 
 <div class="editor">
   <!-- NAV -->
-  <Nav add={addSlide} onDownload={handleDownload} />
+  <Nav
+  add={addSlide}
+  onDownload={handleDownload}
+  onSave={handleSave}
+/>
 
   {#if slides.length === 0}
     <p class="empty">No slides</p>

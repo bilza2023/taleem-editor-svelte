@@ -1,6 +1,7 @@
 <script>
   export let add;
   export let onDownload;
+  export let onSave;
 
   const buttons = [
     { type: "titleAndSubtitle", icon: "🅣" },
@@ -16,7 +17,6 @@
     { type: "imageRightBulletsLeft", icon: "⬅️🖼️" },
 
     { type: "eq", icon: "∑" },
-
     { type: "table", icon: "▦" },
 
     { type: "barChart", icon: "📊" },
@@ -24,14 +24,35 @@
     { type: "quoteSlide", icon: "❝❞" },
     { type: "keyIdeasSlide", icon: "💡" },
 
-    // special action
-    { type: "download", icon: "⬇️" }
+    // 🔥 actions (kept at end)
+    { type: "download", icon: "⬇️" },
+    { type: "export", icon: "⬇💡" }
   ];
 </script>
+
+<div class="nav">
+  {#each buttons as b}
+    <button
+      on:click={() => {
+        if (b.type === "download") {
+          onDownload && onDownload();
+        } else if (b.type === "export") {
+          onSave && onSave();
+        } else {
+          add(b.type);
+        }
+      }}
+      title={b.type}
+    >
+      {b.icon}
+    </button>
+  {/each}
+</div>
 
 <style>
   .nav {
     display: flex;
+    flex-wrap: wrap; /* 🔥 prevents overflow */
     gap: 8px;
     padding: 10px;
     background: #111;
@@ -52,20 +73,3 @@
     background: #2a2a2a;
   }
 </style>
-
-<div class="nav">
-  {#each buttons as b}
-    <button
-      on:click={() => {
-        if (b.type === "download") {
-          onDownload && onDownload();
-        } else {
-          add(b.type);
-        }
-      }}
-      title={b.type}
-    >
-      {b.icon}
-    </button>
-  {/each}
-</div>
