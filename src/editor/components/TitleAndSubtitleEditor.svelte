@@ -61,9 +61,9 @@
     placeholder="Enter title (required)"
   />
 
-  <button on:click={() => setShowAt(slide.data[0])}>
+  <!-- <button on:click={() => setShowAt(slide.data[0])}>
     ⏱
-  </button>
+  </button> -->
 
   <span class="time">{slide.data[0].showAt}</span>
 </div>
@@ -75,9 +75,9 @@
     placeholder="Enter subtitle (optional)"
   />
 
-  <button on:click={() => setShowAt(slide.data[1])}>
+  <!-- <button on:click={() => setShowAt(slide.data[1])}>
     ⏱
-  </button>
+  </button> -->
 
   <span class="time">{slide.data[1].showAt}</span>
 </div>
