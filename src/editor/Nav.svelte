@@ -2,6 +2,7 @@
   export let add;
   export let onDownload;
   export let onSave;
+  export let onMockTiming;
 
   const buttons = [
     { type: "titleAndSubtitle", icon: "🅣" },
@@ -26,6 +27,7 @@
 
     // 🔥 actions (kept at end)
     { type: "download", icon: "⬇️" },
+    { type: "mock", icon: "⏱️" },
     { type: "export", icon: "⬇💡" }
   ];
 </script>
@@ -38,6 +40,8 @@
           onDownload && onDownload();
         } else if (b.type === "export") {
           onSave && onSave();
+        } else if (b.type === "mock") {
+          onMockTiming && onMockTiming();
         } else {
           add(b.type);
         }

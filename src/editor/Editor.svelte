@@ -3,6 +3,7 @@
   import { EditorRegistry } from "./js/editorRegistry.js";
   import { slideFactory } from './js/slideFactory';
   import { finalizeDeck } from "./js/finalizeDeck.js";
+  import { assignMockTimings } from "./js/assignMockTimings.js";
 
   export let deck = { deck: [] };
   export let currentTime = 0;
@@ -136,7 +137,21 @@ function handleSave() {
 
   alert("Deck exported to parent");
 }
+function handleMockTiming() {
+  try {
+    // if(deck){
+      deck = assignMockTimings(deck);
+    // }
 
+    // update editor state (same pattern as others)
+    // onExport(deck);
+
+    alert("Mock timings applied");
+  } catch (err) {
+    console.error(err);
+    alert("Failed to apply mock timings");
+  }
+}
 </script>
 
 <div class="editor">
@@ -145,6 +160,7 @@ function handleSave() {
   add={addSlide}
   onDownload={handleDownload}
   onSave={handleSave}
+  onMockTiming={handleMockTiming}
 />
 
   {#if slides.length === 0}
